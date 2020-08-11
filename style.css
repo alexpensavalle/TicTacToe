@@ -13,3 +13,17 @@
   .canvas-wrapper-parent {
     transform-style: preserver-3d;
   }
+
+  .btn-reset{
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 800px 855px;
+    cursor: pointer;
+    border-radius: 4px;
+  }

@@ -29,36 +29,51 @@ function getInitialBoard (defaultValue) {
 }
 
 //Run the above function to init a global empty board:
-var board = getInitialBoard("");//actually create the board, default value is simply an empty string (NOT USED IN THIS PROJECT...MAYBE SOMEDAY)
+var board = getInitialBoard("");//actually create the board, default value is simply an empty string
 
 
-//Add a playing piece using the mouse!
+
 function addPlayingPiece (mouse) {
-  var xCordinate;//can be 0,1,2
-  var yCordinate;//can be 0,1,2
+    
+    var xCordinate;//can be 0,1,2
+    var yCordinate;//can be 0,1,2
+  
+    for (var x = 0;x < 3;x++) {
+      for (var y = 0;y < 3;y++) {
+        xCordinate = x * sectionSize;
+        yCordinate = y * sectionSize;//height and width of square
+        globalX = x;
+        globalY = y;
+        console.log(x + " " + y);
+  
+        if (//if the mouse is "in bounds" and over an empty square
+          (mouse.x >= xCordinate) && 
+          (mouse.x <= xCordinate + sectionSize) &&
+          (mouse.y >= yCordinate) && 
+          (mouse.y <= yCordinate + sectionSize)
+          ) {
+              if(board[x][y] !== "full") // if spot is open... render that square white....then draw the symbol, fill that spot in board array, and swap players
+              {
+                    clearPlayingArea(xCordinate, yCordinate);
+        
+                    if (player === 1) {
 
-  for (var x = 0;x < 3;x++) {
-    for (var y = 0;y < 3;y++) {
-      xCordinate = x * sectionSize;
-      yCordinate = y * sectionSize;//height and width of square
+                        drawX(xCordinate, yCordinate);
+                        swapPlayers();
+                    }
+                    else {
+                        drawO(xCordinate, yCordinate);
+                        swapPlayers();
+                    }
 
-      if (//if the mouse is "in bounds"
-        (mouse.x >= xCordinate) && 
-        (mouse.x <= xCordinate + sectionSize) &&
-        (mouse.y >= yCordinate) && 
-        (mouse.y <= yCordinate + sectionSize)
-        ) {
-            clearPlayingArea(xCordinate, yCordinate);//aka make that square white....then:
+                    board[x][y] = "full";
+               }
+  
+            }//end of outer if
+      }//end of inner for loop
+    }//end of outer for loop
+  }//end of function
 
-            if (player === 1)
-              drawX(xCordinate, yCordinate);
-            else
-              drawO(xCordinate, yCordinate);
-            
-          }//end of outer if
-    }//end of inner for loop
-  }//end of outer for loop
-}//end of function
 
 //Make a square white aka empty
 function clearPlayingArea (xCordinate, yCordinate) {
@@ -69,6 +84,32 @@ function clearPlayingArea (xCordinate, yCordinate) {
     sectionSize,
     sectionSize
   ); 
+}
+
+function swapPlayers() {
+    if (player === 1) {
+        player = 2;
+    }
+    else {
+        player = 1;
+    }
+}
+
+function resetBoard () {
+    var xCordinate;//can be 0,1,2
+    var yCordinate;//can be 0,1,2
+  
+    for (var x = 0;x < 3;x++) {
+      for (var y = 0;y < 3;y++) {
+        xCordinate = x * sectionSize;
+        yCordinate = y * sectionSize;//height and width of square
+  
+        clearPlayingArea(xCordinate, yCordinate);
+        drawLines(10, lineColor);
+      }
+    }
+    board = getInitialBoard("");
+    player = 1;//set back to x starting off
 }
 
 /*This function uses built-in HTML canvas methods (and some trig) to draw a circle in the selected square*/
@@ -147,15 +188,11 @@ function getCanvasMousePosition (event) {
 
 //Switch players upon click completion "mouseup", AND retrieve mouse position on canvas
 canvas.addEventListener('mouseup', function (event) {
-  if (player === 1)
-    player = 2;
-  else
-    player = 1;
-
-  //Upon click and unclick, 
-  var canvasMousePosition = getCanvasMousePosition(event);
-  
-  //Add piece, and render board
-  addPlayingPiece(canvasMousePosition);
-  drawLines(10, lineColor);
+    //Upon click and unclick, 
+    var canvasMousePosition = getCanvasMousePosition(event);
+    
+    //Add piece, and render board
+    addPlayingPiece(canvasMousePosition);
+    drawLines(10, lineColor);//re-renders the # board lines
+    
 });
